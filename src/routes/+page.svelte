@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { enhance } from '$app/forms';
+	import { toast } from 'svelte-sonner';
 	import type { ActionData } from './$types';
 	let { form }: { form: ActionData } = $props();
 
@@ -10,9 +11,13 @@
 	}
 
 	function copyToClipboard() {
-		if (!url) return;
+		if (!url) {
+			toast.error('No link to copy!');
+			return;
+		}
 
 		navigator.clipboard.writeText(url);
+		toast.success('Copied to clipboard!');
 	}
 
 	let url = $derived(urlFromID(form?.id));
@@ -35,7 +40,7 @@
 		>
 	</div>
 	{#if form}
-		<p class="pt-2 text-center text-sm text-green-500">
+		<p class="text-shadow pt-2 text-center text-sm text-green-500">
 			Success! Your link has been shortened. <button
 				onclick={copyToClipboard}
 				class="underline transition-colors hover:text-green-600">Click to copy to clipboard.</button
