@@ -50,6 +50,7 @@
 		{#if form}
 			<p class="pt-2 text-center text-sm text-green-500 text-shadow">
 				Success! <button
+					type="button"
 					onclick={copyToClipboard}
 					class="underline transition-colors hover:text-green-600"
 					>Click to copy link to clipboard.</button
