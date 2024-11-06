@@ -2,12 +2,14 @@
 // for information about these interfaces
 declare global {
 	namespace App {
-        interface Platform {
-            env: Env
-            cf: CfProperties
-            ctx: ExecutionContext
-        }
-    }
+		interface Platform {
+			env: {
+				DATABASE: D1Database;
+			};
+			cf: CfProperties;
+			ctx: ExecutionContext;
+		}
+	}
 }
 
 export {};
