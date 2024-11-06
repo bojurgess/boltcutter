@@ -2,10 +2,30 @@ import { drizzle } from 'drizzle-orm/d1';
 import type { Actions } from './$types';
 import { links } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
-import { fail } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
+import { RateLimiter } from 'sveltekit-rate-limiter/server';
+import { env } from '$env/dynamic/private';
+
+const limiter = new RateLimiter({
+	IP: [10, 'h'],
+	IPUA: [5, 'm'],
+	cookie: {
+		name: 'limid',
+		secret: env.RATE_LIMITER_SECRET,
+		rate: [2, 'm'],
+		preflight: true
+	}
+});
+
+export const load = async (event) => {
+	await limiter.cookieLimiter?.preflight(event);
+};
 
 export const actions: Actions = {
-	default: async ({ request, platform }) => {
+	default: async (event) => {
+		if (await limiter.isLimited(event)) return error(429, 'Rate limit exceeded');
+		const { request, platform } = event;
+
 		const form = await request.formData();
 		const href = form.get('href') as string;
 
