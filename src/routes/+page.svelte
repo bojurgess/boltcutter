@@ -23,28 +23,40 @@
 	let url = $derived(urlFromID(form?.id));
 </script>
 
-<form method="POST" use:enhance>
-	<label for="href" class="px-4 text-lg font-semibold">Enter a link to shorten</label>
-	<div class="flex">
-		<input
-			type="text"
-			name="href"
-			class="rounded-l-2xl transition-colors focus:ring-0"
-			placeholder="https://example.com"
-			required
-		/>
-		<button
-			type="submit"
-			class="rounded-r-2xl border border-blue-500 bg-blue-500 px-4 text-white transition-colors hover:border-blue-600 hover:bg-blue-600"
-			>Shorten</button
-		>
+<svelte:head>
+	<title>boltcutter.</title>
+</svelte:head>
+
+<div class="flex h-1/3 flex-col items-center justify-around">
+	<div>
+		<h1 class="text-7xl font-bold text-slate-400">boltcutter.</h1>
+		<p class="text-center text-lg">because querystrings make links stupid.</p>
 	</div>
-	{#if form}
-		<p class="text-shadow pt-2 text-center text-sm text-green-500">
-			Success! Your link has been shortened. <button
-				onclick={copyToClipboard}
-				class="underline transition-colors hover:text-green-600">Click to copy to clipboard.</button
+
+	<form method="POST" use:enhance>
+		<label for="href" id="href" class="px-4 text-lg font-semibold">Enter a link to shorten</label>
+		<div class="flex">
+			<input
+				type="text"
+				name="href"
+				class="rounded-l-2xl transition-colors focus:ring-0"
+				placeholder="https://example.com"
+				required
+			/>
+			<button
+				type="submit"
+				class="rounded-r-2xl border border-blue-500 bg-blue-500 px-4 text-white transition-colors hover:border-blue-600 hover:bg-blue-600"
+				>Shorten</button
 			>
-		</p>
-	{/if}
-</form>
+		</div>
+		{#if form}
+			<p class="pt-2 text-center text-sm text-green-500 text-shadow">
+				Success! Your link has been shortened. <button
+					onclick={copyToClipboard}
+					class="underline transition-colors hover:text-green-600"
+					>Click to copy to clipboard.</button
+				>
+			</p>
+		{/if}
+	</form>
+</div>
