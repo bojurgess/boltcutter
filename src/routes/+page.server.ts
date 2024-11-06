@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/d1';
 import type { Actions } from './$types';
 import { links } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
-import { error } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 
 export const actions: Actions = {
 	default: async ({ request, platform }) => {
@@ -19,10 +19,10 @@ export const actions: Actions = {
 			[row] = await db.insert(links).values({ id: generateID(), href }).returning({ id: links.id });
 		}
 
-		if (!row) {
-			return error(500, 'Failed to create link');
+		if (!row.id) {
+			return fail(500);
 		} else {
-			return row.id;
+			return { id: row.id };
 		}
 	}
 };

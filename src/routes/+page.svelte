@@ -1,11 +1,18 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { enhance } from '$app/forms';
-	let { form } = $props();
+	import type { ActionData } from './$types';
+	let { form }: { form: ActionData } = $props();
 
-	function urlFromID(id: string) {
+	function urlFromID(id: string | undefined) {
 		if (!browser) return;
 		return `${window.origin}/${id}`;
+	}
+
+	function copyToClipboard() {
+		if (!url) return;
+
+		navigator.clipboard.writeText(url);
 	}
 
 	let url = $derived(urlFromID(form?.id));
@@ -28,6 +35,11 @@
 		>
 	</div>
 	{#if form}
-		<p>Your link has been shortened to: <a href={url}>{url}</a></p>
+		<p class="pt-2 text-center text-sm text-green-500">
+			Success! Your link has been shortened. <button
+				onclick={copyToClipboard}
+				class="underline transition-colors hover:text-green-600">Click to copy to clipboard.</button
+			>
+		</p>
 	{/if}
 </form>
