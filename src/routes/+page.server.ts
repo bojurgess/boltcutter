@@ -13,16 +13,11 @@ export const actions: Actions = {
 
 		let row: { id: string } | undefined;
 
-		await db.transaction(async (tx) => {
-			[row] = await tx.select({ id: links.id }).from(links).where(eq(links.href, href));
+		[row] = await db.select({ id: links.id }).from(links).where(eq(links.href, href));
 
-			if (!row) {
-				[row] = await tx
-					.insert(links)
-					.values({ id: generateID(), href })
-					.returning({ id: links.id });
-			}
-		});
+		if (!row) {
+			[row] = await db.insert(links).values({ id: generateID(), href }).returning({ id: links.id });
+		}
 
 		if (!row) {
 			return error(500, 'Failed to create link');
